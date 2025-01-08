@@ -1,6 +1,6 @@
 # Design And Implementation Of A Shell Program
 
-This project implements a custom shell program, a fundamental component of any operating system. A shell acts as a command-line interface that allows users to interact with the system by executing commands, launching programs, and automating tasks.
+This project will implement a basic command-line interpreter (shell) that can run commands both interactively and in batch mode, while handling multiple commands simultaneously. The shell will operate by creating a child process to execute the commands entered by the user and will manage processes, concurrency, and basic error handling.
 
 ---
 
@@ -18,23 +18,17 @@ This project implements a custom shell program, a fundamental component of any o
 
 ## Overview
 
-
 This project is a simple custom shell program that works as a command-line interface, allowing users to run commands and interact with the system. The shell can handle multiple commands, execute them, and manage processes efficiently.
 
 It can be operated in two modes:
 
-- Interactive Mode:
-   Users type commands directly, and the shell executes them immediately.
-
+ - Interactive Mode:
+  Users type commands directly, and the shell executes them immediately.
 
 - Batch Mode:
-  Commands are read from a file and executed automatically.
-
-
+ Commands are read from a file and executed automatically.
 
 The shell uses key system features like creating processes (fork()), running programs (execvp()), and waiting for tasks to finish (wait()). It also includes error handling to guide users when something goes wrong.
-
-This project helps demonstrate how operating systems manage commands, processes, and user interaction.
 
 ---
 
@@ -48,10 +42,12 @@ This project helps demonstrate how operating systems manage commands, processes,
 
 ---
 
-## Explanation of the code
+## Code specifications
 
-- Header Files
+This C code consists of four functions, each is meant to implement specific and certain features and functionalities.
 
+---
+- Headings
 ```C
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,35 +58,21 @@ This project helps demonstrate how operating systems manage commands, processes,
 #include <errno.h>
 ```
 
-These are like toolboxes the program needs to do different jobs:
-
 - <stdio.h>: Lets us print messages or read input (e.g., printf and fgets).
-
 - <stdlib.h>: Helps with things like exiting the program (exit) and handling memory.
-
 - <string.h>: Allows us to work with text, like splitting commands or comparing strings.
-
 - <unistd.h>: Gives access to system features like running processes.
-
 - <sys/types.h> and <sys/wait.h>: Allow us to manage child processes (like running a command).
-
 - <errno.h>: Helps us understand what went wrong when something breaks.
 
-
-
 ---
-
-- Constants
 
 ```C
 #define MAX_LINE_LENGTH 512
 #define MAX_COMMANDS 10
 ```
-MAX_LINE_LENGTH: This defines the maximum length (512 characters) of a single command line.
-
-MAX_COMMANDS: This defines how many separate commands we can handle at once (up to 10).
-
-
+- MAX_LINE_LENGTH: This defines the maximum length (512 characters) of a single command line.
+- MAX_COMMANDS: This defines how many separate commands we can handle at once (up to 10).
 
 ---
 
@@ -181,7 +163,7 @@ void execute_commands(char *line) {
     while (wait(NULL) > 0);
 }
 ```
-This part does the following:
+This function do the following:
 
 - Splits the input into different commands. For example, if you type ls; pwd, it separates ls and pwd into two different commands.
 - For each command, it creates a "child process" using fork()—this is like having a separate worker run the command.
@@ -190,6 +172,7 @@ This part does the following:
 - After all the child processes run their commands, the parent process waits for them to finish using wait().
 
 ---
+- The main() function
 ```C
  main() Function
 
