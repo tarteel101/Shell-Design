@@ -7,12 +7,11 @@ This project will implement a basic command-line interpreter (shell) that can ru
 ## Table of Contents
 1. [Overview](#overview)
 2. [Features](#features)
-3. [Usage](#usage)
-4. [Code Explanation](#code-explanation)
+3. [Code Specifications](#code-specifications)
     - [Shell Initialization](#shell-initialization)
     - [Command Execution](#command-execution)
     - [Batch Mode Handling](#batch-mode-handling)
-5. [Contributors](#contributors)
+4. [Contributors](#contributors)
 
 ---
 
@@ -42,11 +41,8 @@ The shell uses key system features like creating processes (fork()), running pro
 
 ---
 
-## Code specifications
+## Code Specifications
 
-This C code consists of four functions, each is meant to implement specific and certain features and functionalities.
-
----
 - Headings
 ```C
 #include <stdio.h>
@@ -75,7 +71,9 @@ This C code consists of four functions, each is meant to implement specific and 
 - MAX_COMMANDS: This defines how many separate commands we can handle at once (up to 10).
 
 ---
+This C code consists of four functions, each is meant to implement specific and certain features and functionalities.
 
+---
 - clear() Function
 ```C
 void clear() {
