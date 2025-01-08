@@ -1,111 +1,49 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <errno.h>
-#define MAX_LINE_LENGTH 512
-#define MAX_COMMANDS 10
-//Clear the screen of the terminal 
-void clear() {
-    printf("\033[H\033[J");
-}
-// Popup message for the user during startup
-void init_shell() {
-    clear();
-    printf("\n\n\n\n****");
-    printf("\n\n\tWELCOME TO THE SHELL PROJECT");
-    printf("\n\n****");
-    printf("\n\n\tDeveloped by: Group of Statistics & Computer Science Department");
-    printf("\n\tUniversity of Khartoum, Faculty of Mathematical Sciences and Informatics");
-    printf("\n\tOperating Systems Course - Lab Assignment");
-    printf("\n\n\tAssignment: Shell Design and Implementation");
-    printf("\n\tInstructor: Izzeldin Kamil Amin");
-    printf("\n\n****");
-    printf("\n\n\tFeatures Implemented:");
-    printf("\n\t- Command Execution (Single and multiple)");
-    printf("\n\t- Custom Built-in Commands");
-    printf("\n\t- Pipe Handling and Improper Space Management");
-    printf("\n\t- User-Friendly Interface with Command History");
-    printf("\n\n****");
-    char* username = getenv("USER");
-    printf("\n\nUSER: @%s", username);
-    printf("\n\n****");
-    sleep(4); // waits 4 seconds for the user to read the message
-    clear();
-}
+# Design And Implementation Of A Shell Program
 
-void execute_commands(char *line) {
-    char *commands[MAX_COMMANDS];
-    int i = 0;
-    // Parse commands separated by ';'
-    char *token = strtok(line, ";");
-    while (token != NULL && i < MAX_COMMANDS) {
-        commands[i++] = token;
-        token = strtok(NULL, ";");
-    }
-    commands[i] = NULL;
-    // Execute each command concurrently
-    for (int j = 0; j < i; j++) {
-        pid_t pid = fork();
-        if (pid == 0) {
-            char *args[MAX_COMMANDS];
-            char *arg = strtok(commands[j], " \t\n");
-            int k = 0;
-            while (arg != NULL && k < MAX_COMMANDS) {
-                args[k++] = arg;
-                arg = strtok(NULL, " \t\n");
-            }
-            args[k] = NULL;
-            if (args[0] != NULL) {
-                if (execvp(args[0], args) == -1) {
-                    fprintf(stderr, "Error executing command '%s': %s\n", args[0], strerror(errno));
-                }
-            }
-            exit(EXIT_FAILURE);
-        } else if (pid < 0) {
-            perror("Fork failed");
-        }
-    }
-    // Wait for all child processes
-    while (wait(NULL) > 0);
-}
-int main(int argc, char *argv[]) {
-    char line[MAX_LINE_LENGTH];
+This project implements a custom shell program, a fundamental component of any operating system. A shell acts as a command-line interface that allows users to interact with the system by executing commands, launching programs, and automating tasks.
 
-    // Initialize the shell
-    init_shell();
-    if (argc == 1) {
-        // Interactive mode
-        while (1) {
-            printf("shell> ");
-            if (fgets(line, MAX_LINE_LENGTH, stdin) == NULL) {
-                break; // End of input (Ctrl+D)
-            }
-            if (strcmp(line, "quit\n") == 0) {
-                break;
-            }
-            execute_commands(line);
-        }
-    } else if (argc == 2) {
-        // Batch mode
-        FILE *batch_file = fopen(argv[1], "r");
-        if (batch_file == NULL) {
-            fprintf(stderr, "Error opening batch file '%s': %s\n", argv[1], strerror(errno));
-            return EXIT_FAILURE;
-        }
-        while (fgets(line, MAX_LINE_LENGTH, batch_file) != NULL) {
-            printf("%s", line); // Echo line
-            if (strcmp(line, "quit\n") == 0) {
-                break;
-            }
-            execute_commands(line);
-        }
-        fclose(batch_file);
-    } else {
-        fprintf(stderr, "Usage: %s [batchFile]\n", argv[0]);
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
-}
+---
+
+## Table of Contents
+1. [Overview](#overview)
+2. [Features](#features)
+3. [Usage](#usage)
+4. [Code Explanation](#code-explanation)
+    - [Shell Initialization](#shell-initialization)
+    - [Command Execution](#command-execution)
+    - [Batch Mode Handling](#batch-mode-handling)
+5. [Contributors](#contributors)
+
+---
+
+## Overview
+
+
+This project is a simple custom shell program that works as a command-line interface, allowing users to run commands and interact with the system. The shell can handle multiple commands, execute them, and manage processes efficiently.
+
+It can be operated in two modes:
+
+- Interactive Mode:
+   Users type commands directly, and the shell executes them immediately.
+
+
+- Batch Mode:
+  Commands are read from a file and executed automatically.
+
+
+
+The shell uses key system features like creating processes (fork()), running programs (execvp()), and waiting for tasks to finish (wait()). It also includes error handling to guide users when something goes wrong.
+
+This project helps demonstrate how operating systems manage commands, processes, and user interaction.
+
+---
+
+## Features
+
+- Command Execution: Supports execution of multiple commands separated by semicolons (;).
+- Custom Built-in Commands: Includes commands like quit to exit the shell.
+- Pipe Handling: Processes commands effectively, ensuring smooth execution.
+- User-Friendly Interface: Offers an interactive and visually appealing experience.
+- Batch Mode: Executes commands from a file for automated tasks.
+
+---
