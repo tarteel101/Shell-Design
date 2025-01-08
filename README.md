@@ -14,7 +14,7 @@ This project will implement a basic command-line interpreter (shell) that can ru
 
 ## Overview
 
-This project is a simple custom shell program that works as a command-line interface, allowing users to run commands and interact with the system. The shell can handle multiple commands, execute them, and manage processes efficiently.
+This project is a custom shell program that works as a command-line interface, allowing users to run commands and interact with the system. The shell can handle multiple commands, execute them, and manage processes efficiently.
 
 It can be operated in two modes:
 
@@ -82,16 +82,12 @@ void init_shell() {
     printf("\n\tDeveloped by: Group of Statistics & Computer Science Department");
     printf("\n\tUniversity of Khartoum, Faculty of Mathematical Sciences and Informatics");
     printf("\n\n****");
-    char* username = getenv("USER");
-    printf("\n\nUSER: @%s", username);
-    printf("\n\n****");
     sleep(3); // Pause to display the message
     clear();
 }
 ```
 This function do the following:
 
-- Clears the screen at the beginning.
 - Displays a welcome message about the project and who developed it.
 - Shows the username of the person running the shell.
 - Pauses for 3 seconds (so you can read the welcome message) using sleep(3).
@@ -144,7 +140,7 @@ void execute_commands(char *line) {
 ```
 This function do the following:
 
-- Splits the input into different commands. For example, if you type ls; pwd, it separates ls and pwd into two different commands.
+- Splits the input into different commands.
 - For each command, it creates a "child process" using fork().
 - It then splits the command into arguments.
 - Executes the command using execvp(). If the command fails, it prints an error message.
@@ -198,16 +194,21 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
 }
 ```
-This code initializes the shell with the welcome message by calling init_shell().
+This code initializes the shell with the welcome message by calling the init_shell() function.
 
-If no extra arguments are given when you run the program (argc == 1), it runs interactively:
-- You type commands, and the shell runs them.
-- It stops when you type quit.
+- #### Interactive Mode (No Arguments):
+If you just run the program like this: ./shell, it starts in interactive mode.
+You’ll see a prompt (shell>) where you can type commands one by one, and the shell will run them.
+The user can type quit to exit, or hit ctrl-D (end of input).
 
-If you give a file as an argument (argc == 2), the shell runs in batch mode:
-- It reads the commands from the file, runs each one, and shows the output.
-- If the file contains quit, the shell stops executing.
-- If you use the program incorrectly (e.g., with wrong number of arguments), it shows a usage message on how to run it.
+- #### Batch Mode (File as an Argument):
+If you run the program like this: ./shell commands.txt, it starts in batch mode.
+The program will read commands from the file (commands.txt), run them, and show the results.
+It will run until it catches a quit command within the file.
+
+- #### Incorrect Usage:
+If the user enters wrong number of arguments, a message will appear that shows how to fix the error:
+"Usage: ./shell [batchFile]"
 
 ---
 
