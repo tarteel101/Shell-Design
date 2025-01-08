@@ -5,13 +5,10 @@ This project will implement a basic command-line interpreter (shell) that can ru
 ---
 
 ## Table of Contents
-1. [Overview](#overview)
-2. [Features](#features)
-3. [Code Specifications](#code-specifications)
-    - [Shell Initialization](#shell-initialization)
-    - [Command Execution](#command-execution)
-    - [Batch Mode Handling](#batch-mode-handling)
-4. [Contributors](#contributors)
+1. [Overview.](#overview)
+2. [Features.](#features)
+3. [Code Specifications.](#code-specifications)
+4. [Testing.](#testing)
 
 ---
 
@@ -43,7 +40,7 @@ The shell uses key system features like creating processes (fork()), running pro
 
 ## Code Specifications
 
-- Headings
+- #### Headings
 ```C
 #include <stdio.h>
 #include <stdlib.h>
@@ -71,21 +68,11 @@ The shell uses key system features like creating processes (fork()), running pro
 - MAX_COMMANDS: This defines how many separate commands we can handle at once (up to 10).
 
 ---
-This C code consists of four functions, each is meant to implement specific and certain features and functionalities.
-
----
-- clear() Function
-```C
-void clear() {
-    printf("\033[H\033[J");
-}
-```
-This function clears the screen in the terminal, so you start with a clean space. It’s like hitting the "clear" button in a calculator or wiping the board clean.
-
+This C code consists of **three functions**, each is meant to implement specific and certain features and functionalities.
 
 ---
 
-- init_shell() Function
+#### 1. The init_shell() Function
 ```
 void init_shell() {
     clear();
@@ -95,16 +82,10 @@ void init_shell() {
     printf("\n\tDeveloped by: Group of Statistics & Computer Science Department");
     printf("\n\tUniversity of Khartoum, Faculty of Mathematical Sciences and Informatics");
     printf("\n\n****");
-    printf("\n\n\tFeatures Implemented:");
-    printf("\n\t- Command Execution");
-    printf("\n\t- Custom Built-in Commands");
-    printf("\n\t- Pipe Handling");
-    printf("\n\t- User-Friendly Interface");
-    printf("\n\n****");
     char* username = getenv("USER");
     printf("\n\nUSER: @%s", username);
     printf("\n\n****");
-    sleep(4); // Pause to display the message
+    sleep(3); // Pause to display the message
     clear();
 }
 ```
@@ -113,11 +94,11 @@ This function do the following:
 - Clears the screen at the beginning.
 - Displays a welcome message about the project and who developed it.
 - Shows the username of the person running the shell.
-- Pauses for 4 seconds (so you can read the welcome message) using sleep(4).
+- Pauses for 3 seconds (so you can read the welcome message) using sleep(3).
 - After the pause, it clears the screen again, getting ready for the user to enter commands.
 ---
 
-- execute_commands() Function
+#### 2. The execute_commands() Function
 ```C
 void execute_commands(char *line) {
     char *commands[MAX_COMMANDS];
@@ -164,13 +145,13 @@ void execute_commands(char *line) {
 This function do the following:
 
 - Splits the input into different commands. For example, if you type ls; pwd, it separates ls and pwd into two different commands.
-- For each command, it creates a "child process" using fork()—this is like having a separate worker run the command.
-- It then splits the command into arguments (like separating ls from its options).
-- Executes the command using execvp(). If the command fails (e.g., if it's not recognized), it prints an error message.
+- For each command, it creates a "child process" using fork().
+- It then splits the command into arguments.
+- Executes the command using execvp(). If the command fails, it prints an error message.
 - After all the child processes run their commands, the parent process waits for them to finish using wait().
 
 ---
-- The main() function
+#### 3. The main() function
 ```C
  main() Function
 
@@ -226,7 +207,7 @@ If no extra arguments are given when you run the program (argc == 1), it runs in
 If you give a file as an argument (argc == 2), the shell runs in batch mode:
 - It reads the commands from the file, runs each one, and shows the output.
 - If the file contains quit, the shell stops executing.
-- If you use the program incorrectly (e.g., without proper arguments), it shows a usage message on how to run it.
+- If you use the program incorrectly (e.g., with wrong number of arguments), it shows a usage message on how to run it.
 
 ---
 
