@@ -218,7 +218,7 @@ How to Test the Code:
 **Expected Output**: Output of the respective commands.
 
 - **Multiple Commands:** Enter commands separated by ; (e.g., ls; pwd).
-**Expected Output:** Results of all commands executed simultaneously.
+**Expected Output:** Results of all commands are executed simultaneously.
 
 - **Invalid Command:** Enter a non-existent command as when to misspell a command.
 **Expected Output:** Error executing 'misspelled-command': <error message>
@@ -227,7 +227,7 @@ How to Test the Code:
 **Expected result:** Shell exits.
 
 - **Batch File:** Create a file with multiple commands and pass it as an argument (e.g., ./shell my_commands.txt).
-**Expected result:** All commands in the file are executed sequentially.
+**Expected result:** All commands in the file are executed simultaneously.
 
 - **Long Command:** Input a command longer than MAX_LINE_LENGTH.
 **Expected Output:** Error: Command too long.
@@ -245,4 +245,6 @@ This book provided essential insights into process management, system calls, and
 
 3. Lindholm, T. (2012). Advanced C Programming. O'Reilly Media.
 
-## 
+---
+## Contributers
+
