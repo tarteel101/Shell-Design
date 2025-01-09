@@ -1,6 +1,6 @@
 # Design And Implementation Of A Shell Program
 
-This project will implement a basic command-line interpreter (shell) that can run commands both interactively and in batch mode, while handling multiple commands simultaneously. The shell will operate by creating a child process to execute the commands entered by the user and will manage processes, concurrency, and basic error handling.
+This project implements a basic command-line interpreter (shell) that can run commands both interactively and in batch mode, while handling multiple commands simultaneously. The shell will operate by creating a child process to execute the commands entered by the user and will manage processes, concurrency, and basic error handling.
 
 ---
 
@@ -9,12 +9,14 @@ This project will implement a basic command-line interpreter (shell) that can ru
 2. [Features.](#features)
 3. [Code Specifications.](#code-specifications)
 4. [Testing.](#testing)
+5. [Resources.](#Resources)
+6. [Contributers.](#Contributers)
 
 ---
 
 ## Overview
 
-This project is a custom shell program that works as a command-line interface, allowing users to run commands and interact with the system. The shell can handle multiple commands, execute them, and manage processes efficiently.
+This projec implements a shell program that works as a command-line interface, allowing users to run commands and interact with the system. The shell can handle multiple commands, execute them, and manage processes efficiently.
 
 It can be operated in two modes:
 
@@ -49,6 +51,11 @@ The shell uses key system features like creating processes (fork()), running pro
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
+#define MAX_LINE_LENGTH 512 
+#define MAX_COMMANDS 10      
+#define clear()
+printf("\033[H\033[J") // Clears the screen using ANSI escape codes
+
 ```
 
 - <stdio.h>: Lets us print messages or read input (e.g., printf and fgets).
@@ -57,23 +64,15 @@ The shell uses key system features like creating processes (fork()), running pro
 - <unistd.h>: Gives access to system features like running processes.
 - <sys/types.h> and <sys/wait.h>: Allow us to manage child processes (like running a command).
 - <errno.h>: Helps us understand what went wrong when something breaks.
-
----
-
-```C
-#define MAX_LINE_LENGTH 512
-#define MAX_COMMANDS 10
-```
+  
 - MAX_LINE_LENGTH: This defines the maximum length (512 characters) of a single command line.
 - MAX_COMMANDS: This defines how many separate commands we can handle at once (up to 10).
-
 ---
 This C code consists of **three functions**, each is meant to implement specific and certain features and functionalities.
 
 ---
-
 #### 1. The initialize() Function
-```
+```C
 void initialize() {
     clear();
     printf("\n\n\n\n****");
@@ -82,183 +81,168 @@ void initialize() {
     printf("\n\tDeveloped by: Group of Statistics & Computer Science Department");
     printf("\n\tUniversity of Khartoum, Faculty of Mathematical Sciences and Informatics");
     printf("\n\n****");
-    sleep(3); // Pause to display the message
+    printf("\n\n\tFeatures Implemented:");
+    printf("\n\t-User Command Execution");
+    printf("\n\t-Processes Management");
+    printf("\n\t- Error Handling");
+    printf("\n\t- User-Friendly Interface");
+    printf("\n\n****");
+    sleep(3); // Display the message briefly
     clear();
 }
 ```
-This function initializes the shell by doing the following:
+- **Purpose:** This function is used to display a welcome message when the shell starts.
+- **Clear the screen:** It uses clear() to wipe the terminal screen to make the welcome message stand out.
+- **Display information:** Shows details about the shell's features and development team.
+- **Pause for reading:** It sleeps for 3 seconds to give the user time to read the message before clearing the screen again.
 
-- Claers the screen of the terminal at the beginning.
-- Displays a welcome message about the project.
-- Pauses for 3 seconds (so you can read the welcome message) using sleep(3).
-- After the pause, it clears the screen again, getting ready for the user to enter commands.
 ---
 
 #### 2. The execute() Function
 ```C
 void execute(char *line) {
-    char *commands[MAX_COMMANDS];
+    char *commands[MAX_COMMANDS]; // Array to store multiple commands separated by ;
     int i = 0;
 
-    // Split input by ';' into separate commands
+    // Split the input line into individual commands using ; as a delimiter
     char *token = strtok(line, ";");
     while (token != NULL && i < MAX_COMMANDS) {
-        commands[i++] = token;
-        token = strtok(NULL, ";");
+        commands[i++] = token; // Store each command in the array
+        token = strtok(NULL, ";"); // Get the next command
     }
-    commands[i] = NULL;
+    commands[i] = NULL; // Mark the end of the array
 
     // Execute each command
     for (int j = 0; j < i; j++) {
-        pid_t pid = fork();
-        if (pid == 0) {
-            // Parse individual command arguments
-            char *args[MAX_COMMANDS];
-            char *arg = strtok(commands[j], " \t\n");
+        pid_t pid = fork(); // Create a child process for each command
+        if (pid == 0) { // In the child process
+            char *args[MAX_COMMANDS]; // Array to store the command arguments
+            char *arg = strtok(commands[j], " \t\n"); // Split the command into arguments
             int k = 0;
             while (arg != NULL && k < MAX_COMMANDS) {
-                args[k++] = arg;
-                arg = strtok(NULL, " \t\n");
+                args[k++] = arg; // Store each argument
+                arg = strtok(NULL, " \t\n"); // Get the next argument
             }
-            args[k] = NULL;
+            args[k] = NULL; // End of arguments
 
-            // Execute the command
             if (args[0] != NULL) {
-                if (execvp(args[0], args) == -1) {
+                if (execvp(args[0], args) == -1) { // Execute the command
+                    // If execution fails, display an error
                     fprintf(stderr, "Error executing '%s': %s\n", args[0], strerror(errno));
+                    exit(EXIT_FAILURE); // Exit with failure
                 }
             }
-            exit(EXIT_FAILURE);
+            exit(EXIT_SUCCESS); // Exit child process after executing the command
         } else if (pid < 0) {
+            // Fork failed, show error
             perror("Fork failed");
         }
     }
-
-    // Wait for all child processes to finish
-    while (wait(NULL) > 0);
+    // Parent does not wait here, allowing simultaneous execution
 }
 ```
-This function do the following:
-
-- Splits the input into different commands.
-- For each command, it creates a "child process" using fork().
-- It then splits the command into arguments.
-- Executes the command using execvp(). If the command fails, it prints an error message.
-- After all the child processes run their commands, the parent process waits for them to finish using wait().
+- **Purpose:** This function takes the user's input (which may contain multiple commands), splits it into individual commands, and executes them.
+- **Splitting Commands:** The input string is split into separate commands by semicolons (;), and each command is processed individually.
+- **Forking child processes:** For each command, a child process is created using fork(), allowing commands to run in parallel.
+- **Argument parsing:** Each command is further split into its arguments (separated by spaces or tabs).
+- **Executing Commands:** Each command is executed using execvp(), replacing the child process with the specified command.
+- **No waiting:** The parent process doesn't wait for child processes to finish, allowing them to run simultaneously.
+- **Error handling:** If the execvp() fails, an error message is displayed, and the child process exits.
 
 ---
 #### 3. The main() function
 ```C
- main() Function
-
 int main(int argc, char *argv[]) {
-    char line[MAX_LINE_LENGTH];
+    char line[MAX_LINE_LENGTH]; // Buffer to store user input or file commands
 
-    // Initialize the shell
-    initialize();
+    initialize(); // Display the welcome message and clear the screen
 
     if (argc == 1) {
-        // Interactive mode: Read commands from the user
+        // Interactive mode: Commands are entered directly by the user
         while (1) {
-            printf("shell> ");
-            if (fgets(line, MAX_LINE_LENGTH, stdin) == NULL) {
-                break; // Exit on (Ctrl+D)
+            printf("shell> "); // Display the shell prompt
+            if (fgets(line, MAX_LINE_LENGTH, stdin) == NULL) { // Read user input
+                printf("\nExiting shell.\n");
+                break; // Exit the shell on EOF (Ctrl+D)
             }
-            if (strcmp(line, "quit\n") == 0) {
-                break;
+            line[strcspn(line, "\n")] = 0; // Remove the newline character from input
+            if (strcmp(line, "quit") == 0) { // Check for the "quit" command
+                break; // Exit the shell
             }
-            execute(line);
+            if (strlen(line) >= MAX_LINE_LENGTH - 1) { // Check for overly long commands
+                fprintf(stderr, "Error: Command too long.\n");
+                continue; // Skip execution of this input
+            }
+            execute(line); // Execute the command(s)
         }
     } else if (argc == 2) {
-        // Batch mode: Execute commands from a file
-        FILE *batch_file = fopen(argv[1], "r");
+        // Batch mode: Commands are read from a file
+        FILE *batch_file = fopen(argv[1], "r"); // Open the file
         if (batch_file == NULL) {
+            // File could not be opened, print an error message
             fprintf(stderr, "Error opening file '%s': %s\n", argv[1], strerror(errno));
-            return EXIT_FAILURE;
+            return EXIT_FAILURE; // Exit with failure
         }
 
+        // Read and execute each line from the file
         while (fgets(line, MAX_LINE_LENGTH, batch_file) != NULL) {
-            printf("%s", line); // Display the command
-            if (strcmp(line, "quit\n") == 0) {
-                break;
+            line[strcspn(line, "\n")] = 0; // Remove the newline character
+            printf("%s\n", line); // Display the command
+            if (strcmp(line, "quit") == 0) { // Check for the "quit" command
+                break; // Stop reading the file
             }
-            execute(line);
+            execute(line); // Execute the command(s)
         }
-        fclose(batch_file);
+        fclose(batch_file); // Close the file
     } else {
-        // Display usage instructions for incorrect arguments
+        // Invalid arguments: Display usage instructions
         fprintf(stderr, "Usage: %s [batchFile]\n", argv[0]);
-        return EXIT_FAILURE;
+        return EXIT_FAILURE; // Exit with failure
     }
 
-    return EXIT_SUCCESS;
+    return EXIT_SUCCESS; // Exit successfully
 }
 ```
-- This code initializes the shell with the welcome message by calling the initialize() function.
-Checks Input Mode:
-- If no extra arguments are given, it runs in interactive mode, waiting for the user to enter the commands.
-- If a file is provided as an argument, the shell will run in batch mode, reading commands from the file.
-
-#### Interactive Mode:
-- Shows a prompt (shell>) and waits for the user to type a command.
-- Runs the command immediately.
-- Exits if the user types quit or press Ctrl+D (End of Input).
-
-#### Batch Mode:
-- If the user runs the program like this: ./shell commands.txt, it starts in batch mode.
-- The program will read commands from the file (commands.txt), run them, and show the results.
-- It will run until it catches a quit command within the file.
-
-#### Error Handling:
-- If the file doesn’t exist or can’t be opened in batch mode, it shows an error message and exits.
-- If the user entered a wrong number of arguments, it displays a message showing how to open the file properly like:
-"Usage: ./shell [batchFile]".
-Closes any files and exits once the commands are done or the user enters quit.
+- **Purpose:** This is the main entry point of the shell program, controlling how it functions according the arguments passed.
+- **Interactive Mode:** If no batch file is provided, the user is prompted to input commands interactively. It reads input, processes commands, and executes them in parallel.
+- **Batch Mode:** If a batch file is provided, it reads commands from the file and executes them one by one. Commands in the file are processed similarly to interactive commands but are read from the file.
+- **Error handling:** It checks if the file exists and handles the case of wrong number of arguments.
+- **Exit condition:** The program exits when the user enters "quit" or reaches the end of the file.
+- **Buffering Input:** The program reads the entire line of input, removing newline characters before processing it.
 
 ---
 ## Testing
+How to Test the Code:
 
-1. Interactive Mode:
+- **Basic Commands**: Test simple commands like ls, pwd, or date.
+**Expected Output**: Output of the respective commands.
 
-When you run the program with no arguments, you’ll see the welcome message.
+- **Multiple Commands:** Enter commands separated by ; (e.g., ls; pwd).
+**Expected Output:** Results of all commands executed simultaneously.
 
-The shell will then prompt you for commands (e.g., shell> ).
+- **Invalid Command:** Enter a non-existent command as when to misspell a command.
+**Expected Output:** Error executing 'misspelled-command': <error message>
 
-You can type commands like ls, pwd, etc.
+- **Quit Command:** Type quit to exit the shell.
+**Expected result:** Shell exits.
 
-After typing quit, the program exits.
+- **Batch File:** Create a file with multiple commands and pass it as an argument (e.g., ./shell my_commands.txt).
+**Expected result:** All commands in the file are executed sequentially.
 
-
-
-2. Batch Mode:
-
-If you run the program with a file containing commands (e.g., ./shell commands.txt), it will read and execute each command from the file.
-
-The shell will show the results of each command.
-
-When the file contains quit, the program will stop.
-
-
-
-
-Example: If commands.txt contains:
-
-ls
-pwd
-quit
-
-The output will show:
-
-$ ls
-(Your directory contents)
-$ pwd
-/your/current/directory
-
-After it reads quit, the shell will stop.
-
+- **Long Command:** Input a command longer than MAX_LINE_LENGTH.
+**Expected Output:** Error: Command too long.
 
 ---
+## Resources
+References Used for Designing and Implementing the Shell Program in C
 
-Summary
+The following references were utilized in the design and implementation of the shell program in C. These resources provided valuable insights into the core concepts of shell programming, C programming techniques, process management, system calls, and best practices for building efficient and functional shells. The materials helped guide the development process, from basic command execution to handling user inputs and system interactions effectively.
 
-This program is a simple shell that lets you run commands either by typing them directly or by reading from a file. It supports basic features like command execution and handles errors if something goes wrong. The flow is interactive, where you type commands, or batch, where commands are read from a file.
+1. Tanenbaum, A. S., & Bos, H. (2015). Modern Operating Systems (5th ed.). Pearson.
+This book provided essential insights into process management, system calls, and shell operations, forming the foundation for the design and execution of our shell program.
+
+2. Linux Foundation. (2019). Linux Command Line and Shell Scripting Bible (4th ed.). Wiley.
+
+3. Lindholm, T. (2012). Advanced C Programming. O'Reilly Media.
+
+## 
