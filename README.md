@@ -72,9 +72,9 @@ This C code consists of **three functions**, each is meant to implement specific
 
 ---
 
-#### 1. The init_shell() Function
+#### 1. The initialize() Function
 ```
-void init_shell() {
+void initialize() {
     clear();
     printf("\n\n\n\n****");
     printf("\n\n\tWELCOME TO THE SHELL PROJECT");
@@ -86,17 +86,17 @@ void init_shell() {
     clear();
 }
 ```
-This function do the following:
+This function initializes the shell by doing the following:
 
-- Displays a welcome message about the project and who developed it.
-- Shows the username of the person running the shell.
+- Claers the screen of the terminal at the beginning.
+- Displays a welcome message about the project.
 - Pauses for 3 seconds (so you can read the welcome message) using sleep(3).
 - After the pause, it clears the screen again, getting ready for the user to enter commands.
 ---
 
-#### 2. The execute_commands() Function
+#### 2. The execute() Function
 ```C
-void execute_commands(char *line) {
+void execute(char *line) {
     char *commands[MAX_COMMANDS];
     int i = 0;
 
@@ -155,19 +155,19 @@ int main(int argc, char *argv[]) {
     char line[MAX_LINE_LENGTH];
 
     // Initialize the shell
-    init_shell();
+    initialize();
 
     if (argc == 1) {
         // Interactive mode: Read commands from the user
         while (1) {
             printf("shell> ");
             if (fgets(line, MAX_LINE_LENGTH, stdin) == NULL) {
-                break; // Exit on EOF (Ctrl+D)
+                break; // Exit on (Ctrl+D)
             }
             if (strcmp(line, "quit\n") == 0) {
                 break;
             }
-            execute_commands(line);
+            execute(line);
         }
     } else if (argc == 2) {
         // Batch mode: Execute commands from a file
@@ -182,7 +182,7 @@ int main(int argc, char *argv[]) {
             if (strcmp(line, "quit\n") == 0) {
                 break;
             }
-            execute_commands(line);
+            execute(line);
         }
         fclose(batch_file);
     } else {
@@ -194,25 +194,29 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
 }
 ```
-This code initializes the shell with the welcome message by calling the init_shell() function.
+- This code initializes the shell with the welcome message by calling the initialize() function.
+Checks Input Mode:
+- If no extra arguments are given, it runs in interactive mode, waiting for the user to enter the commands.
+- If a file is provided as an argument, the shell will run in batch mode, reading commands from the file.
 
-- #### Interactive Mode (No Arguments):
-If you just run the program like this: ./shell, it starts in interactive mode.
-You’ll see a prompt (shell>) where you can type commands one by one, and the shell will run them.
-The user can type quit to exit, or hit ctrl-D (end of input).
+#### Interactive Mode:
+- Shows a prompt (shell>) and waits for the user to type a command.
+- Runs the command immediately.
+- Exits if the user types quit or press Ctrl+D (End of Input).
 
-- #### Batch Mode (File as an Argument):
-If you run the program like this: ./shell commands.txt, it starts in batch mode.
-The program will read commands from the file (commands.txt), run them, and show the results.
-It will run until it catches a quit command within the file.
+#### Batch Mode:
+- If the user runs the program like this: ./shell commands.txt, it starts in batch mode.
+- The program will read commands from the file (commands.txt), run them, and show the results.
+- It will run until it catches a quit command within the file.
 
-- #### Incorrect Usage:
-If the user enters wrong number of arguments, a message will appear that shows how to fix the error:
-"Usage: ./shell [batchFile]"
+#### Error Handling:
+- If the file doesn’t exist or can’t be opened in batch mode, it shows an error message and exits.
+- If the user entered a wrong number of arguments, it displays a message showing how to open the file properly like:
+"Usage: ./shell [batchFile]".
+Closes any files and exits once the commands are done or the user enters quit.
 
 ---
-
-What to Expect in Tests
+## Testing
 
 1. Interactive Mode:
 
