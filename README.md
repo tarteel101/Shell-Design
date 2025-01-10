@@ -248,3 +248,6 @@ This book provided essential insights into process management, system calls, and
 ---
 ## Contributers
 
+- [Duaa Kamal](https://github.com/DuaaKamal)
+- [Reham Ammar](https://github.com/Reham-AM)
+- [Tarteel Salah Abdalla](https://github.com/tarteel101)
