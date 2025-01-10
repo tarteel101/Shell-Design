@@ -9,8 +9,8 @@ This project implements a basic command-line interpreter (shell) that can run co
 2. [Features.](#features)
 3. [Code Specifications.](#code-specifications)
 4. [Testing.](#testing)
-5. [Resources.](#Resources)
-6. [Contributers.](#Contributers)
+5. [Resources.](#resources)
+6. [Contributers.](#contributers)
 
 ---
 
