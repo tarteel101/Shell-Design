@@ -252,4 +252,4 @@ This project was developed as a collaborative effort by a team, with each member
 - [Tarteel Salah Abdalla Abdelmahmoud](https://github.com/tarteel101)
 - [Duaa Kamal Mohammed Elhassan](https://github.com/DuaaKamal)
 - [Reham Ammar Mahgoub Osman](https://github.com/Reham-AM)
-- [Dalia Tarig Mohamed gamiel]()
+- [Dalia Tarig Mohamed gamiel](https://github.com/daloo15)
