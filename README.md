@@ -249,7 +249,7 @@ This book provided essential insights into process management, system calls, and
 ## Contributers
 This project was developed as a collaborative effort by a team, with each member contributing to its design and implementation.
 
-- [Duaa Kamal](https://github.com/DuaaKamal)
-- [Reham Ammar](https://github.com/Reham-AM)
-- [Tarteel Salah Abdalla](https://github.com/tarteel101)
-- 
+- [Tarteel Salah Abdalla Abdelmahmoud](https://github.com/tarteel101)
+- [Duaa Kamal Mohammed Elhassan](https://github.com/DuaaKamal)
+- [Reham Ammar Mahgoub Osman](https://github.com/Reham-AM)
+- [Dalia Tarig Mohamed gamiel]()
